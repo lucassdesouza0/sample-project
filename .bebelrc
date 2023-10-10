@@ -1,0 +1,14 @@
+{
+    "presets": [
+        "next/babel",
+        "@babel/preset-react",
+        "@babel/plugin-syntax-jsx"
+    ],
+    "plugins": [],
+    "preset": "ts-jest",
+    "globals": {
+        "ts-jest": {
+            "babelConfig": true
+        }
+    },
+}
