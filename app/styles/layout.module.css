@@ -8,6 +8,8 @@
   grid-template-rows: auto auto 1fr 36px;
   align-items: center;
   min-height: 100vh;
+  padding-left: 5vw;
+  padding-right: 5vw;
 }
 
 .logo {
@@ -21,6 +23,7 @@
 
 .main {
   grid-area: main;
+  width: 100%;
 }
 
 .header,
@@ -83,6 +86,13 @@
   width: 100%;
 }
 
+.main .usersTable { 
+  width: 100%;
+}
+.main table {
+  width: 100%;
+}
+
 .main td, .main th {
   border: 1px solid #ddd;
   padding: 8px;
@@ -102,11 +112,16 @@
   border-radius: 2px;
 }
 
-.main button {
+/* .main button {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
   background-color: #0c0185;
   color: white;
   font-weight: bold;
+} */
+
+.main input {
+  /* background-color: #DAFFFB ; */
+  /* color: #04364A; */
 }

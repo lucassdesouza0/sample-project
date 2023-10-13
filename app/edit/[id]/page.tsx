@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import Form from "@/app/components/Form/Form";
 import { useUsers } from "@/app/hooks/useUsers";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,7 @@ export default function IndexPage({ params }: { params: { id: number } }) {
 
   return (
     <>
-      <h1>Condo Users</h1>
+      <h1>Update User Info</h1>
 
       <Form
         newUser={false}
@@ -18,7 +18,7 @@ export default function IndexPage({ params }: { params: { id: number } }) {
         addUser={addUser}
         updateUser={(values) => {
           updateUser(values);
-          router.push("/");
+          router.push(`/user/${params.id}`);
         }}
       />
     </>

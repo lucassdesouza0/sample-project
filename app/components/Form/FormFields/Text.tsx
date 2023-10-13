@@ -31,6 +31,7 @@ export default function Text({
       id={id}
       name={id}
       label={label}
+      variant="outlined"
       inputProps={{ "data-testid": testId }}
       type={type}
       value={value}
@@ -38,6 +39,7 @@ export default function Text({
       onBlur={handleBlur}
       error={error}
       helperText={error && errorMessage}
+      margin="normal"
     />
   );
 }

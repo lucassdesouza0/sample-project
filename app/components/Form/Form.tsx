@@ -7,7 +7,11 @@ import TextField from "@material-ui/core/TextField";
 
 import Text from "./FormFields/Text";
 import Grid from "@material-ui/core/Grid";
-import { useUsers } from "../../hooks/useUsers";
+import { useUsers } from "../../hooks/useUsers/useUsers";
+import { useRouter } from "next/navigation";
+import { Snackbar } from "@material-ui/core";
+
+// import styles from "./Form.module.css";
 
 const validationSchema = yup.object({
   first_name: yup.string().required("First Name is required"),
@@ -35,8 +39,14 @@ export default function Form({
   updateUser?: (values: any) => void;
 }) {
   const { getUserById } = useUsers();
+  const [open, setOpen] = React.useState(false);
+  const route = useRouter();
 
   const userData = getUserById(id);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const formik = useFormik({
     initialValues:
@@ -57,16 +67,18 @@ export default function Form({
     onSubmit: (values) => {
       if (newUser && addUser) {
         addUser(values);
+        setOpen(true);
       } else if (updateUser) {
-        console.log("onSubmit values", values);
         updateUser(values);
+        setOpen(true);
       }
+      route.push(`/user/${id}`);
     },
   });
 
   return (
     <div>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} name="user-form">
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <Text
@@ -182,6 +194,15 @@ export default function Form({
         >
           {newUser ? "Save User" : "Update User"}
         </Button>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          data-testid="snackbar"
+          message={
+            newUser ? "User added successfully" : "User updated successfully"
+          }
+        />
       </form>
     </div>
   );

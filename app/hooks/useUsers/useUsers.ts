@@ -1,9 +1,9 @@
 // Path: condo-admin/app/hooks/users.ts
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import mockData from "@/lib/mock_data.json";
 import { selectUsers, useDispatch, useSelector, userSlice } from "@/lib/redux";
-import { Users } from "../types/users";
+import { Users } from "../../types/users";
 
 export const useUsers = () => {
   const users = useSelector(selectUsers);
@@ -14,21 +14,13 @@ export const useUsers = () => {
     dispatch(userSlice.actions.load(mockData));
   };
 
-  const getUsersFromDb = () => {
-    // setUsers(getUsers());
-  };
-
   const getUserById = (id: number) => {
-    const user = users.at(id - 1);
+    const user = users.filter((u) => u.id == id)[0];
     return user;
-    // return getUserById(id);
   };
 
   const addUser = (user: Users) => {
-    user.id = users.length + 2;
-    dispatch(userSlice.actions.add(user));
-    // addUser(user);
-    // setUsers(getUsers());
+    dispatch(userSlice.actions.add({ ...user, id: users.length + 2 }));
   };
 
   const updateUser = (user: Users) => {
@@ -40,23 +32,20 @@ export const useUsers = () => {
     });
 
     dispatch(userSlice.actions.load(newUserList));
-
-    // updateUser(user);
-    // setUsers(getUsers());
   };
 
-  const deleteUserFromDb = (id: string) => {
-    // deleteUser(id);
-    // setUsers(getUsers());
+  const deleteUser = (id: number) => {
+    const newUsers = users.filter((u) => u.id !== id);
+
+    dispatch(userSlice.actions.load(newUsers));
   };
 
   return {
     users,
     loadUsers,
-    getUsersFromDb,
     getUserById,
     addUser,
     updateUser,
-    deleteUserFromDb,
+    deleteUser,
   };
 };

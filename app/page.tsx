@@ -1,18 +1,29 @@
 "use client";
-import { useUsers } from "./hooks/useUsers";
+import React from "react";
 import { useRouter } from "next/navigation";
 import {
+  CellContext,
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Users } from "./types/users";
 import { memo, useEffect } from "react";
 import Link from "next/link";
 
+import { useUsers } from "./hooks/useUsers/useUsers";
+import { Users } from "./types/users";
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@material-ui/core";
+
 function IndexPage() {
-  const { loadUsers, users, addUser } = useUsers();
+  const { loadUsers, users, addUser, deleteUser } = useUsers();
   const router = useRouter();
 
   const columnHelper = createColumnHelper<Users>();
@@ -20,25 +31,72 @@ function IndexPage() {
   const columns = [
     // Display Column
     columnHelper.accessor("id", {
-      cell: (props) => <span>{props.getValue()}</span>,
+      cell: (props) => (
+        <Link
+          style={{ display: "block", width: "100%" }}
+          href={`/user/${props.row.original.id}`}
+        >
+          {props.getValue()}
+        </Link>
+      ),
     }),
     columnHelper.accessor("first_name", {
       header: "First Name",
-      cell: (props) => <span>{props.getValue()}</span>,
+      cell: (props) => (
+        <Link
+          style={{ display: "block", width: "100%" }}
+          href={`/user/${props.row.original.id}`}
+        >
+          {props.getValue()}
+        </Link>
+      ),
     }),
     columnHelper.accessor("last_name", {
       header: "Last Name",
-      cell: (props) => <span>{props.getValue()}</span>,
+      cell: (props) => (
+        <Link
+          style={{ display: "block", width: "100%" }}
+          href={`/user/${props.row.original.id}`}
+        >
+          {props.getValue()}
+        </Link>
+      ),
     }),
     columnHelper.accessor("email", {
       header: "Email",
-      cell: (props) => <span>{props.getValue()}</span>,
+      cell: (props) => (
+        <Link
+          style={{ display: "block", width: "100%" }}
+          href={`/user/${props.row.original.id}`}
+        >
+          {props.getValue()}
+        </Link>
+      ),
     }),
     {
-      id: "expander",
+      id: "edit",
       header: () => null,
-      cell: (props) => (
-        <Link href={`/edit/${props.row.original.id}`}>Edit</Link>
+      cell: (props: CellContext<Users, string>) => (
+        <Link
+          style={{ display: "block", width: "100%" }}
+          href={`/edit/${props.row.original.id}`}
+        >
+          EDIT
+        </Link>
+      ),
+    },
+    {
+      id: "delete",
+      header: () => null,
+      cell: (props: CellContext<Users, string>) => (
+        <Button
+          data-testid="delete"
+          onClick={() => {
+            deleteUser(props.row.original.id);
+          }}
+        >
+          Delete {props.row.original.id}
+        </Button>
       ),
     },
   ];
@@ -57,39 +115,55 @@ function IndexPage() {
 
   return (
     <>
-      <h1>Condo Users</h1>
-
-      <div className="usersTable">
-        <table>
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} data-testid="user-info">
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table>
+        <TableHead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow
+              key={headerGroup.id}
+              data-testid="user-info"
+              onClick={() => {
+                router.push(`user/${1}`);
+              }}
+            >
+              {headerGroup.headers.map((header) => (
+                <TableCell key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableHead>
+        <TableBody>
+          {table.getRowModel().rows.map((row) => (
+            <TableRow key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {["edit"].includes(cell.id) ? (
+                    <Button
+                      key={cell.id}
+                      style={{ width: "100%", padding: "none" }}
+                      variant="outlined"
+                      color="primary"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </Button>
+                  ) : (
+                    flexRender(cell.column.columnDef.cell, cell.getContext())
+                  )}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </>
   );
 }
